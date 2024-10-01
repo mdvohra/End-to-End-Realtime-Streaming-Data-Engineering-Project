@@ -17,14 +17,6 @@
 **kafka_stream.py:** Airflow DAG script that pushes API data to Kafka during 2 minutes every 1 seconds. \
 **spark_stream.py:** Consumes and processes data from Kafka using Spark Structured Streaming. 
 
-## What You'll Learn:
-
-Setting up and orchestrating pipelines with Apache Airflow. \
-Real-time data streaming with Apache Kafka. \
-Synchronization with Apache Zookeeper. \
-Data processing with Apache Spark. \
-Storage solutions with Cassandra and PostgreSQL. \
-Containerization of the entire setup using Docker. \
 **Technologies:** \
 Apache Airflow, Python, Apache Kafka, Apache Zookeeper, Apache Spark, Cassandra, PostgreSQL, Docker 
 
