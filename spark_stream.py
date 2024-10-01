@@ -56,6 +56,11 @@ def insert_data(session, **kwargs):
     phone = kwargs.get('phone')
     picture = kwargs.get('picture')
 
+    # Check if username is None to prevent null primary key errors
+    if username is None:
+        logger.warning("Skipping record due to null username")
+        return
+
     try:
         session.execute("""
             INSERT INTO spark_streaming.created_users (first_name, last_name, gender, address,
@@ -63,10 +68,11 @@ def insert_data(session, **kwargs):
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (first_name, last_name, gender, address,
               postcode, email, username, dob, registered_date, phone, picture))
-        logger.info(f"Data inserted for {first_name} {last_name}")
+        logger.info(f"Data inserted for {username}")
 
     except Exception as e:
-        logger.error(f"Error while inserting data: {e}")
+        logger.error(f"Error while inserting data for {username}: {e}")
+
 
 
 
@@ -113,7 +119,10 @@ def connect_to_kafka(spark_conn):
 def create_cassandra_connection():
     try:
         # Connection to Cassandra cluster
-        cluster = Cluster(['cassandra_db'])
+        cluster = Cluster(
+    			contact_points=['cassandra_db'], 
+    			load_balancing_policy=DCAwareRoundRobinPolicy(local_dc='datacenter1'),
+    			protocol_version=5)
         cas_session = cluster.connect()
         logger.info("Cassandra connection created successfully")
         return cas_session
